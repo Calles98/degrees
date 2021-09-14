@@ -95,42 +95,54 @@ def shortest_path(source, target):
     # TODO
     #raise NotImplementedError
   
-    num_explored = 0
+    
 
-    start = Node(state=source, parent=None, action=None)
+    first = Node(state=source, parent=None, action=None)
     frontier = QueueFrontier()
-    frontier.add(start)
+    frontier.add(first)
+    node_explored = set()
 
-   
-    explored = set()
-
-    while True:
-        
+    while True:    
         if frontier.empty():
             return None
 
         node = frontier.remove()
         
-        num_explored += 1
+
+        for movie, person in neighbors_for_person(node.state):
+            if not frontier.contains_state(person) and person not in node_explored:
+                child = Node(state=person, parent=node, action=movie)
+            
+            if child.state == target:
+                path = []
+                while child.parent is not None:
+                    path.append((child.action, node.state))
+                    child = child.parent
+                
+                path.reverse()
+                return path
+
+            frontier.add(child)
+
+        node_explored.add(node.state)
+        
+
 
         
-        explored.add(node.state)
-        
-        
-        for movie, actor in neighbors_for_person(node.state):
-            if actor not in explored and  not frontier.contains_state(actor):
-                child = Node(state=actor, parent=node, action=movie)
-                if child.state == target:
-                   
-                    path = []
-                    node = child
-                    while node.parent is not None:
-                        path.append((node.action, node.state))
-                        node = node.parent
+        #for movie, actor in neighbors_for_person(node.state):
+         #   if actor not in node_explored and not frontier.contains_state(actor):
+           #     child = Node(state=actor, parent=node, action=movie)
+            #    if child.state == target:
+             #      
+              #      path = []
+               #     node = child
+                #   while node.parent is not None:
+                 #       path.append((node.action, node.state))
+                 #       node = node.parent
 
-                    path.reverse()
-                    return path
-                frontier.add(child)
+                  #  path.reverse()
+                   # return path
+                #frontier.add(child)
 
 
 
