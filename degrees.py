@@ -105,23 +105,23 @@ def shortest_path(source, target):
     while True:    
         if frontier.empty():
             return None
-            
+
         node = frontier.remove()
         
         for movie, person in neighbors_for_person(node.state):
             if not frontier.contains_state(person) and person not in node_explored:
-                child = Node(state=person, parent=node, action=movie)
+                child_node = Node(state=person, parent=node, action=movie)
             
-            if child.state == target:
+            if child_node.state == target:
                 path = []
-                while child.parent is not None:
-                    path.append((child.action, node.state))
-                    child = child.parent
+                while child_node.parent is not None:
+                    path.append((child_node.action, node.state))
+                    child_node = child_node.parent
                 
                 path.reverse()
                 return path
 
-            frontier.add(child)
+            frontier.add(child_node)
 
         node_explored.add(node.state)
         
